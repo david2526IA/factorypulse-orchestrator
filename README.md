@@ -1,69 +1,70 @@
 # FactoryPulse Orchestrator
 
-> One-command, pinned-version end-to-end demonstration of the FactoryPulse platform.
+> Ejecución reproducible, de extremo a extremo, de la plataforma de referencia FactoryPulse.
 
-[![End-to-end CI](https://github.com/david2526IA/factorypulse-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/david2526IA/factorypulse-orchestrator/actions/workflows/ci.yml)
-[![FactoryPulse](https://img.shields.io/badge/platform-FactoryPulse-2563EB)](https://github.com/david2526IA/factorypulse-contracts)
+[![CI de extremo a extremo](https://github.com/david2526IA/factorypulse-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/david2526IA/factorypulse-orchestrator/actions/workflows/ci.yml)
+[![FactoryPulse](https://img.shields.io/badge/plataforma-FactoryPulse-2563EB)](https://github.com/david2526IA/factorypulse-contracts)
 
-This repository proves that FactoryPulse is more than a collection of isolated examples. It installs pinned versions of the upstream components and runs the complete path from simulated sensor telemetry to a read-only API-ready operational view.
+<p align="center"><img src="docs/flujo.svg" alt="Flujo de FactoryPulse: telemetría, lakehouse, inteligencia y API" width="100%"></p>
 
-## What one command does
+Este repositorio demuestra una plataforma conectada, no una colección de ejemplos aislados. Instala versiones fijadas de cada componente y ejecuta el recorrido completo desde telemetría simulada hasta artefactos preparados para una API de solo lectura.
 
-```text
-factorypulse-run run
-        │
-        ├── Ingestion: emits validated telemetry.v1 JSONL
-        ├── Lakehouse: creates DuckDB/Parquet and data_quality.v1
-        ├── Intelligence: publishes explainable anomaly.v1 JSONL
-        └── API staging: prepares a read-only artifact directory
-```
+## Qué resuelve
 
-## Quick start
+| Necesidad | Respuesta del proyecto |
+| --- | --- |
+| Reproducibilidad | Las dependencias internas están fijadas a commits concretos. |
+| Trazabilidad | Cada ejecución crea un manifiesto con parámetros y artefactos. |
+| Calidad de datos | La telemetría se valida antes de alimentar el lakehouse. |
+| Operación explicable | Las anomalías incluyen motivos; la API solo expone resultados. |
+
+## Ejecución rápida
 
 ```bash
 git clone https://github.com/david2526IA/factorypulse-orchestrator.git
 cd factorypulse-orchestrator
 python -m venv .venv
-```
-
-Activate the environment, then run:
-
-```bash
+# Activa el entorno virtual según tu sistema operativo
 pip install -e ".[dev]"
+
 factorypulse-run run --workspace artifacts/demo --count 120 --fault-after 85
 factorypulse-run serve --workspace artifacts/demo
 pytest -q
 ```
 
-Open `http://127.0.0.1:8000/docs` to inspect the API. The [FactoryPulse Dashboard](https://github.com/david2526IA/factorypulse-dashboard) can consume a compatible API URL through its `?api=` parameter.
+Después, abre `http://127.0.0.1:8000/docs` para consultar la API. El [dashboard de FactoryPulse](https://github.com/david2526IA/factorypulse-dashboard) puede consumir una URL compatible con el parámetro `?api=`.
 
-## Run artifacts
+## Artefactos generados
 
 ```text
 artifacts/demo/
-├── telemetry.jsonl
-├── anomalies.jsonl
+├── telemetry.jsonl                 # telemetría simulada validada
+├── anomalies.jsonl                 # señales explicables detectadas
 ├── warehouse/
 │   ├── warehouse.duckdb
 │   ├── silver_telemetry.parquet
 │   └── gold_asset_health.parquet
-├── api-data/
+├── api-data/                       # directorio listo para la API
 │   ├── warehouse.duckdb
 │   ├── anomalies.jsonl
 │   └── data_quality_event.json
-└── run_manifest.json
+└── run_manifest.json               # parámetros y resultados
 ```
 
-The run manifest records parameters and outputs, making the demonstration reproducible and reviewable.
+## Criterios de diseño
 
-## Versioning decision
+- Actualizar un componente es una decisión explícita y revisable; no se aceptan cambios silenciosos por versiones flotantes.
+- Los resultados se conservan como ficheros locales para poder inspeccionarlos y repetir la demostración.
+- El repositorio prueba el flujo completo en CI, no solo funciones aisladas.
 
-Each upstream dependency is pinned to a Git commit. This prevents an unrelated later change in a component from silently changing this end-to-end demo. Updating a component is therefore an explicit, reviewable decision.
+## Límite operativo
 
-## Safety boundary
+FactoryPulse es una plataforma de referencia simulada y de solo lectura. No controla actuadores ni debe conectarse a equipos reales sin un programa independiente de ingeniería, ciberseguridad y seguridad funcional.
 
-FactoryPulse is a simulated, read-only reference platform. It has no actuator control capability and must not be connected to real operational equipment without a separate engineering, security and safety programme.
+## English summary
 
-## License
+This repository runs the pinned FactoryPulse components end-to-end: simulated telemetry, contract-aware lakehouse, explainable anomaly detection and read-only API-ready artifacts. Every run produces a manifest for reproducibility. It is a simulated reference platform, not an industrial control system.
+
+## Licencia
 
 MIT © 2026 David Falcon
