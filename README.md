@@ -67,4 +67,4 @@ This repository runs the pinned FactoryPulse components end-to-end: simulated te
 
 ## Licencia
 
-MIT © 2026 David Falcon
+MIT © 2026 David

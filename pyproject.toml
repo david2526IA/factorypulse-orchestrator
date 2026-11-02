@@ -9,7 +9,7 @@ description = "One-command, pinned-version end-to-end FactoryPulse demonstration
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-authors = [{name = "David Falcon"}]
+authors = [{name = "David"}]
 dependencies = [
   "factorypulse-ingestion @ git+https://github.com/david2526IA/factorypulse-ingestion.git@d151cc1",
   "factorypulse-lakehouse @ git+https://github.com/david2526IA/factorypulse-lakehouse.git@380f303",
